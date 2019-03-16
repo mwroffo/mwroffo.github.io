@@ -1,0 +1,21 @@
+# picobot-diamond.txt solves the coverage problem for the picobot diamond map.
+# 2017-12-27 15:34:21 locke1
+
+# pro tip: it always simpler than you think.
+
+# Find the northern tip of the diamond:
+0 x*** -> N 0
+0 NExx -> W 0
+0 NxWx -> E 0
+0 NEWx -> S 1
+
+# go all the way west, then all the way east.
+1 **x* -> W 1
+1 **W* -> E 2
+2 *x** -> E 2
+
+# at the eastern wall, nudge west,
+2 *E** -> W 3
+
+# then south, then repeat.
+3 ***x -> S 1

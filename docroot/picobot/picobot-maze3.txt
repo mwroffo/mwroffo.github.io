@@ -1,0 +1,36 @@
+# picobot-maze3.txt contains the correct instructions for guiding
+# picobot through type-A mazes by implementing the right-hand rule.
+# 3 indicates that this was my 3rd attempt.
+# 2017-12-27 15:42:09 rofofo
+
+# state 0: picobot points north.
+# state 1: picobot points east. 
+# state 2: picobot points south.
+# state 3: picobot points west.
+
+# initialize orientation:
+0 xx** -> E 1
+
+# when hand is touching wall, go forward.
+0 xE** -> N 0
+1 *x*S -> E 1
+2 **Wx -> S 2
+3 N*x* -> W 3
+
+# when hand loses wall, turn right and step forward:
+0 Nx** -> E 1
+1 ***x -> S 2
+2 **x* -> W 3
+3 x*** -> N 0
+
+# if you can't turn right, turn left and step forward:
+0 NEx* -> W 3
+1 xE*S -> N 0
+2 *xWS -> E 1
+3 N*Wx -> S 2
+
+# if you can't turn right or left, turn around:
+0 NEWx -> S 2
+1 NExS -> W 3
+2 xEWS -> N 0
+3 NxWS -> E 1

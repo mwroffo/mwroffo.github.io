@@ -1,0 +1,79 @@
+/* style.css is for screens at least 481px */
+
+body {
+    max-width: 40em;
+    margin: auto;
+    padding: 5px;
+    font-size: medium;
+    /* why is font-size changing the width of my content area? */
+}
+
+.no-dec {
+    text-decoration: none;
+}
+
+h1 {
+	/*font-family: 	Georgia, Times, serif;*/
+	color: 			Maroon;
+    font-size: 2.5em;
+}
+
+h2, h3 {
+	font-family: 	Georgia, Times, serif;
+	color: 			Maroon;
+    font-size: 1.4em;
+}
+
+h4 {
+    font-family:    Georgia, Times, serif;
+    color:          Maroon;
+    font-size: 1.1em;
+}
+
+p, ul, #body {
+	font-family: Verdana, Geneva, Arial, sans-serif; /*Georgia, Times, serif;*/
+    font-size: 17px;
+    line-height: 1.25
+}
+
+ol {
+    font-family: Verdana, Geneva, Arial, sans-serif; /*Georgia, Times, serif;*/
+    font-size: 15px;
+    line-height: 1.5em;
+}
+
+.very_small {
+    font-size: 9px;
+}
+
+/* It would be smart to redo this entire page with relative font sizes, 
+but at this point I can't seem to do it without breaking the design I like so much. */
+
+#footnotes {
+    border-top: 1px solid black;
+/* this makes the font 70% smaller than the parent. */
+}
+
+.FN_top {
+    font-size: 13px;
+}
+
+.FN_bot {
+    font-size: 0.7em;
+    /* and this makes it 70% of the div. many layers. */
+}
+
+#fn2 {
+    font-style: italic;
+}
+
+#see_all {
+    text-align: right;
+    font-size: 14px;
+}
+
+#gray_subtitle {
+    font-family: Verdana, Geneva, Arial, sans-serif; /*Georgia, Times, serif;*/
+    font-size: 13px;
+    color: #808080;
+}

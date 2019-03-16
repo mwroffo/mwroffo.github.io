@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Database Test Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+</head>
+<body>
+    <h3>My name is Sandpiper.</h3>
+    <form name="myform" action="sql_insert.php" method="POST">
+        <input type="hidden" name="test-submit">
+
+        <!-- username and password:  -->
+        <label for="username">Username: </label>
+        <input type="text" name="username" placeholder="Enter your username" required>
+        <label for="password">Password: </label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+
+        <!-- the table:  -->
+        <label for="table">Table: </label>
+        <input type="text" name="table" placeholder="Enter a table" required>
+        <!-- contents of the card:  -->
+        <label for="front">Front: </label>
+        <input type="text" name="front" placeholder="Enter a question" required>
+        <label for="back">Back: </label>
+        <input type="text" name="back"  placeholder="Enter an answer" required>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

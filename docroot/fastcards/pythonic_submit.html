@@ -1,0 +1,15 @@
+<DOCTYPE html>
+<html>
+
+<head><title>python submit test</title></head>
+
+<body>
+    <!-- MUST include the first / in /cgi-bin/ to properly trigger the ScriptAlias in Apache -->
+    <form action="/cgi-bin/hello_world.py" name="myform" method="POST">
+        <input type="text" name="name" placeholder="Michael" value="Roffo">
+        <!-- <input type="text" name="addr" placeholder="137 Middle Rd." value="some address"> -->
+        <button type="submit">Test submit</button>
+    </form>
+</body>
+
+</html>

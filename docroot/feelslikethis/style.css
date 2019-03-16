@@ -1,0 +1,47 @@
+body {
+    background: url(photos/mike_yelling.jpg);
+    background-size: cover;
+    /*line-height: 0;*/
+}
+
+.video-container {
+    text-align: right;
+    float: right;
+    padding-right: 10%;
+}
+
+#spotify {
+    text-align: center;
+    float: bottom;
+}
+
+.fa {
+    padding-left: 30%;
+    padding: 20px;
+    font-size: 30px;
+    width: 20px;
+    text-align: center;
+    /*takes out underline */
+    text-decoration: none;
+    margin: 5px 2px;
+    border-radius: 70%;
+}
+
+.fa:hover {
+    opacity: 0.8;
+}
+
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
+
+.fa-youtube {
+  background: #bb0000;
+  color: white;
+}
+
+.fa-instagram {
+  background: #125688;
+  color: white;
+}
