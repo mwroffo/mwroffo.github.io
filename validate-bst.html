@@ -1,0 +1,174 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css">
+<style>
+	.markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		margin: 0 auto;
+		padding: 45px;
+	}
+
+	@media (max-width: 767px) {
+		.markdown-body {
+			padding: 15px;
+		}
+	}
+</style>
+<article class="markdown-body"><h1>How to: Validate a Binary Search Tree (Java)</h1>
+<p><em>Credit to LeetCode for an excellent testing and learning environment for this question. Use their environment to <a href="https://leetcode.com/explore/interview/card/top-interview-questions-easy/94/trees/625/">follow along</a> with this article. The example cases in this article are the contributions of LeetCode users.</em></p>
+<p>Suppose we have the following code with a data structure, <code>TreeNode</code>, and a method, <code>isValidBST</code>.</p>
+<p><strong>Definition:</strong> A given binary tree <em>T</em> is a valid <em>Binary Search Tree</em> (BST) if and only if:</p>
+<ol>
+<li>The left subtree contains only values strictly less than the value in the root node.</li>
+<li>The right subtree contains only values strictly greater than the value in the root node.</li>
+<li>All subtrees are valid BSTs.</li>
+</ol>
+<pre><code>public class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode() {}
+    TreeNode(int val) {this.val = val;}
+    TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+    }
+}
+public boolean isValidBST(TreeNode root) {
+    // TODO
+}
+</code></pre>
+<p>And we are asked to implement the method <code>isValidBST</code>, which, given a <code>TreeNode</code>, namely <code>root</code>, returns a boolean indicating whether <code>root</code> is the root of a valid Binary Search Tree. Okay. Let's go.</p>
+<p>The third requirement, that all subtrees must also be valid BSTs, implies that whatever BST-validating procedure we run on the root node, that procedure should also validate our subtrees. Okay: subproblems with a base case.... Can you say <em>recursion</em>?</p>
+<p>Indeed a recursive method is an excellent strategy, here.</p>
+<p>For our first try, then, let's write a method that confirms whether a node is greater than its left child and less than its right child:</p>
+<pre><code>public boolean isValidBST(TreeNode root) {
+    if (root == null) return true; // empty tree is valid by convention.
+    if (root.left == null &amp;&amp; root.right == null) return true; // tree of one node is valid.
+    if (root.left == null) {
+        return root.val &lt; root.right.val;
+    } else if (root.right == null) {
+        return root.left.val &lt; root.val;
+    } else {
+        return root.val &lt; root.right.val &amp;&amp; root.left.val &lt; root.val;
+    }
+}
+</code></pre>
+<p>Running this case we find that the binary tres <code>[]</code>, <code>[1]</code>, and <code>[2,1,3]</code> pass. But observe the binary tree:</p>
+<p><strong><em>Example 1</em></strong></p>
+<pre><code>  5
+ / \
+1   7
+   / \
+  3   8
+</code></pre>
+<p>Example 1 passes our validator but in fact is not a BST. (Why?)</p>
+<p>We have confirmed the bounds of the root node and its immediate children. We have even confirmed that the tree's left and right subtrees are themselves valid BSTs. But with respect to the root node, the right subtree is not a valid BST because it contains an element not greater than the root's value. We missed this because our method checked this element's bounds only with respect to its immediate parent, when in fact we must do so for all ancestors, with sucessive method calls.</p>
+<p>In other words: we have neglected our recursive step, and indeed, reading over our code again, it doesn't contain any recursive calls. Derp.</p>
+<p>As we descend the tree, a node's value must satisfy increasingly tight lower and upper bounds. Encoding a flexible requirement is exactly what method parameters are for. So. Define a helper method <code>isValidBST(TreeNode node, int min, int max)</code> which lets us pass those tightening bounds as arguments, and another <code>isWithinBounds(int val, int min, int max)</code>, so that we <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">don't repeat ourselves</a> more than necessary.</p>
+<p>Have a look:</p>
+<pre><code>public boolean isValidBST(TreeNode root) {
+    return isValidBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+}
+private boolean isValidBST(TreeNode node, int min, int max) {
+    if (node == null) return true; // empty tree is valid BST by convention.
+    if (node.left == null &amp;&amp; node.right == null) {
+        return isWithinBounds(node.val, min, max);
+    } else if (node.left == null) {
+        return isWithinBounds(node.val, min, max)
+            &amp;&amp; isValidBST(node.right, node.val, max);
+    } else if (node.right == null) {
+        return isWithinBounds(node.val, min, max)
+            &amp;&amp; isValidBST(node.left, min, node.val);
+    } else {
+        return isWithinBounds(node.val, min, max)
+            &amp;&amp; isValidBST(node.left, min, node.val)
+            &amp;&amp; isValidBST(node.right, node.val, max);
+    }
+}
+private boolean isWithinBounds(int val, int min, int max) {
+    return min &lt; val &amp;&amp; val &lt; max;
+}
+</code></pre>
+<p>Great, our validator now properly rejects trees with a left-subtree element not less than the root value, and it rejects trees containing a right-subtree element not greater than the root value. Good.</p>
+<p>But now there's another problem:</p>
+<p><strong><em>Example 2</em></strong></p>
+<pre><code>2147483647
+</code></pre>
+<p>The single-node tree in Example 2 fails when it should pass. (Why? What is this seemingly arbitrary large number?)</p>
+<p>To debug this, we must recognize that 2147483647 is in fact 2^31 - 1, which in Java equals the greatest possible value of a Java <code>int</code>, Integer.MAX_VALUE.</p>
+<p>Let's try to make Example 2 pass by modifying isWithinBounds</p>
+<pre><code>public boolean isValidBST(TreeNode root) {
+    return isValidBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+}
+private boolean isValidBST(TreeNode node, int min, int max) {
+    if (node == null) return true;
+    if (node.left == null &amp;&amp; node.right == null)
+        return isWithinBounds(node.val, min, max);
+    else if (node.left == null) {
+        return isWithinBounds(node.val, min, max)
+            &amp;&amp; isValidBST(node.right, node.val, max);
+    } else if (node.right == null) {
+        return isWithinBounds(node.val, min, max)
+            &amp;&amp; isValidBST(node.left, min, node.val);
+    } else {
+        return isWithinBounds(node.val, min, max)
+            &amp;&amp; isValidBST(node.right, node.val, max)
+            &amp;&amp; isValidBST(node.left, min, node.val);
+    }
+}
+private boolean isWithinBounds(int val, Integer min, Integer max) {
+    boolean lb = false; boolean ub = false;
+    if (min == Integer.MIN_VALUE) {
+        lb = min &lt;= val;
+    } else lb = min &lt; val;
+    if (max == Integer.MAX_VALUE) {
+        ub = val &lt;= max;
+    } else ub = val &lt; max;
+    return lb &amp;&amp; ub;
+}
+</code></pre>
+<p>Great. Example 2 is now being properly validated. But running the code again, LeetCode points out that the tree</p>
+<p><strong><em>Example 3</em></strong></p>
+<pre><code>    2147483647
+      / 
+2147483647
+</code></pre>
+<p>is passing when it should fail.</p>
+<p>By passing <code>Integer.MIN_VALUE</code> and <code>Integer.MAX_VALUE</code> as bounds in our initial call we have actually <em>set arbitrarily extreme boundaries</em>, when the problem really calls for a programmatic representation of <em>no boundaries yet given</em>, i.e. infinity. <strong>As we see, representing infinity with extreme integer values turns out not to work. We must distinguish extreme bounds from having no bound at all</strong> (i.e. <em>infinite bounds</em>) in a different way.</p>
+<p>Java's primitive integer type <code>int</code> has no empty value. But using Java's integer-wrapper <code>Integer</code>, we can have a <code>null</code> integer... and it works at last.</p>
+<p>Observe:</p>
+<pre><code>    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, null, null);
+    }
+    private boolean isValidBST(TreeNode node, Integer min, Integer max) {
+        if (node == null) return true;
+        if (node.left == null &amp;&amp; node.right == null)
+            return isWithinBounds(node.val, min, max);
+        else if (node.left == null) {
+            return isWithinBounds(node.val, min, max)
+                &amp;&amp; isValidBST(node.right, node.val, max);
+        } else if (node.right == null) {
+            return isWithinBounds(node.val, min, max)
+                &amp;&amp; isValidBST(node.left, min, node.val);
+        } else {
+            return isWithinBounds(node.val, min, max)
+                &amp;&amp; isValidBST(node.right, node.val, max)
+                &amp;&amp; isValidBST(node.left, min, node.val);
+        }
+    }
+    private boolean isWithinBounds(int val, Integer min, Integer max) {
+        if (min == null &amp;&amp; max == null) return true;
+        else if (min == null)
+            return val &lt; max;
+        else if (max == null)
+            return min &lt; val;
+        else {
+            return min &lt; val &amp;&amp; val &lt; max;
+        }
+    }
+</code></pre>
+<p>Happy coding. --Michael</p>
+</article>

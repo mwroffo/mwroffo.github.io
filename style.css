@@ -1,27 +1,21 @@
 /* style.css is for screens at least 481px */
 
-body {
-    max-width: 40em;
-    margin: auto;
-    padding: 5px;
-    font-size: medium;
-    /* why is font-size changing the width of my content area? */
-}
-
 .no-dec {
     text-decoration: none;
 }
 
 h1 {
-	/*font-family: 	Georgia, Times, serif;*/
+    font-family: 	Georgia, Times, serif;
+
 	color: 			Maroon;
-    font-size: 2.5em;
+    /* font-size: 2.5em; */
 }
 
 h2, h3 {
-	font-family: 	Georgia, Times, serif;
+    font-family: 	Georgia, Times, serif;
+    font-family:    sans-serif;
 	color: 			Maroon;
-    font-size: 1.4em;
+    /* font-size: 1.4em; */
 }
 
 h4 {
